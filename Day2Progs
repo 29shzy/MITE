@@ -16,7 +16,7 @@ int main()
         scanf("%d", &weight);
         if(weight >= 950 && weight <= 1050)
         {
-            acceptCount++;
+            acceptedCount++;
         }
         else
         {
