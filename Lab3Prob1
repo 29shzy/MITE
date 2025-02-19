@@ -1,0 +1,38 @@
+#include<stdio.h>
+int main() {
+    int n, m;
+    int marks[100][10];
+    int totalMarks[100]={0};
+
+    printf("Enter number of students: ");
+    scanf("%d", &n);
+    printf("Enter number of subject: ");
+    scanf("%d", &m);
+
+    printf("Enter marks: \n");
+    for(int i=0; i<n; i++){
+        printf("\nStudent %d: ", i+1);
+        for (int j = 0; j < m; j++) {
+            scanf("%d", &marks[i][j]);
+            totalMarks[i] += marks[i][j]; 
+        }
+    }
+
+    
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (totalMarks[j] < totalMarks[j + 1]) {
+                int temp = totalMarks[j];
+                totalMarks[j] = totalMarks[j + 1];
+                totalMarks[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Sorted results:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Total Marks = %d\n", totalMarks[i]);
+    }
+
+    return 0;
+}
