@@ -1,0 +1,57 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX 100
+
+struct Passenger {
+    char name[50];
+    int age;
+    char dest[50];
+};
+
+int main() {
+    int n;
+    struct Passenger p[MAX];
+
+    printf("Enter number of passengers: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Passenger %d: ", i + 1);
+        scanf(" %49[^,], %d, %49[^\n]", p[i].name, &p[i].age, p[i].dest);
+    }
+
+    // Simple Sort (Bubble Sort - inefficient for large datasets)
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (strcmp(p[j].dest, p[j + 1].dest) > 0) {
+                struct Passenger t = p[j];
+                p[j] = p[j + 1];
+                p[j + 1] = t;
+            }
+        }
+    }
+
+    printf("\nSorted List:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s - %s\n", p[i].name, p[i].dest);
+    }
+
+    char s[50];
+    printf("\nEnter destination to search: ");
+    scanf(" %49[^\n]", s);
+
+    printf("Passengers to %s:\n", s);
+    int f = 0;
+    for (int i = 0; i < n; i++) {
+        if (strcmp(p[i].dest, s) == 0) {
+            printf("%s\n", p[i].name);
+            f = 1;
+        }
+    }
+    if (!f) {
+        printf("Not found.\n");
+    }
+
+    return 0;
+}
