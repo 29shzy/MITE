@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct Medicine {
+    int id;
+    char name[100];
+    int year;
+    int month;
+    int day;
+    int price;
+};
+typedef struct Medicine medicine;
+
+void ReadMedicineDetails(medicine medicines[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Medicine %d : ", i + 1);
+        scanf("%d,%[^,], %d-%d-%d,%d", &medicines[i].id, medicines[i].name, &medicines[i].year, &medicines[i].month, &medicines[i].day, &medicines[i].price);
+    }
+}
+
+void sortMedicines(medicine medicines[], int n)
+{
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (medicines[j].year > medicines[j + 1].year)
+            {
+                
+                medicine temp = medicines[j];
+                medicines[j] = medicines[j + 1];
+                medicines[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void saveMedicines(medicine medicines[], int n) {
+    FILE* file = fopen("Medicine.txt", "w");
+    if (file == NULL) {
+        printf("Cannot create file.\n");
+        return;
+    }
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%d %s %d-%d-%d %d\n", medicines[i].id, medicines[i].name, medicines[i].year, medicines[i].month, medicines[i].day, medicines[i].price);
+    }
+    fclose(file);
+}
+
+void loadMedicines(medicine medicines[], int n) {
+    FILE* file = fopen("Medicine.txt", "r");
+    if (file == NULL) {
+        printf("Cannot open file.\n");
+        return;
+    }
+    for (int i = 0; i < n; i++) {
+        fscanf(file, "%d %s %d-%d-%d %d", &medicines[i].id, medicines[i].name, &medicines[i].year, &medicines[i].month, &medicines[i].day, &medicines[i].price);
+    }
+    fclose(file);
+}
+
+int main() {
+    int n;
+    medicine medicines[100];
+
+    printf("Enter number of medicines: ");
+    scanf("%d", &n);
+
+    ReadMedicineDetails(medicines, n); 
+    saveMedicines(medicines, n);      
+    loadMedicines(medicines, n);      
+    sortMedicines(medicines, n);      
+
+    printf("Sorted Medicines:\n");
+    for (int i = 0; i < n; i++) {
+        printf("%s - %d-%02d-%02d\n", medicines[i].name, medicines[i].year, medicines[i].month, medicines[i].day);
+    }
+
+    return 0;
+}
