@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct Employee {
+    int id;
+    char name[50];
+    float basic_salary;
+    float allowances;
+    float gross_salary;
+};
+typedef struct Employee Employee;
+
+
+void ReadEmployeeDetails(Employee emp[], int n);
+void ComputeGrossSalary(Employee emp[], int n);
+void SavePayrollData(Employee emp[], int n);
+void RetrieveEmployeeSalary(Employee emp[], int n);
+
+int main() {
+    int n;
+    Employee emp[100];
+
+    printf("Enter number of employees: ");
+    scanf("%d", &n);
+
+  
+    ReadEmployeeDetails(emp, n);
+
+  
+    ComputeGrossSalary(emp, n);
+
+    
+    SavePayrollData(emp, n);
+
+   
+    RetrieveEmployeeSalary(emp, n);
+
+    return 0;
+}
+
+
+void ReadEmployeeDetails(Employee emp[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Employee %d : ", i + 1);
+        scanf("%d,%[^,],%f,%f", &emp[i].id,emp[i].name, &emp[i].basic_salary, &emp[i].allowances);
+    }
+}
+
+
+void ComputeGrossSalary(Employee emp[], int n) {
+    for (int i = 0; i < n; i++) {
+        emp[i].gross_salary = emp[i].basic_salary + emp[i].allowances;
+    }
+}
+
+void SavePayrollData(Employee emp[], int n) {
+    FILE* file = fopen("payroll.txt", "w");
+    if (file == NULL) {
+        printf("Cannot create file.\n");
+        return;
+    }
+    for (int i = 0; i < n; i++) {
+        fprintf(file, "%d,%s,%.2f,%.2f,%.2f\n", emp[i].id, emp[i].name, emp[i].basic_salary, emp[i].allowances, emp[i].gross_salary);
+    }
+    fclose(file);
+    printf("Record saved in 'payroll.txt'\n");
+}
+
+
+void RetrieveEmployeeSalary(Employee emp[], int n) {
+    int search_id;
+    printf("\nEnter Employee ID to search: ");
+    scanf("%d", &search_id);
+
+    for (int i = 0; i < n; i++) {
+        if (emp[i].id == search_id) {
+            printf("Employee: %s\n", emp[i].name);
+            printf("Gross Salary: ₹%.2f\n", emp[i].gross_salary);
+            return;
+        }
+    }
+    printf("Employee ID not found.\n");
+}
