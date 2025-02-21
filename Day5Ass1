@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_HISTORY 100
+#define MAX_URL_LENGTH 256
+
+typedef struct {
+    char url[MAX_URL_LENGTH];
+} Page;
+
+typedef struct {
+    Page pages[MAX_HISTORY];
+    int top;
+} Stack;
+
+void initialize(Stack *stack) {
+    stack->top = -1;
+}
+
+int isEmpty(Stack *stack) {
+    return stack->top == -1;
+}
+
+int isFull(Stack *stack) {
+    return stack->top == MAX_HISTORY - 1;
+}
+
+void push(Stack *stack, const char *url) {
+    if (isFull(stack)) {
+        printf("History full. Cannot add more pages.\n");
+        return;
+    }
+    strcpy(stack->pages[++stack->top].url, url);
+    printf("Visited: %s\n", url);
+}
+
+char* pop(Stack *stack) {
+    if (isEmpty(stack)) {
+        return NULL;
+    }
+    return stack->pages[stack->top--].url;
+}
+
+char* peek(Stack *stack) {
+     if (isEmpty(stack)) {
+        return NULL;
+    }
+    return stack->pages[stack->top].url;
+}
+
+
+int main() {
+    Stack backwardStack, forwardStack;
+    initialize(&backwardStack);
+    initialize(&forwardStack);
+
+    push(&backwardStack, "google.com");
+    push(&backwardStack, "github.com");
+    push(&backwardStack, "stackoverflow.com");
+
+    char *currentPage;
+
+    // Go Back
+    char *previousPage = pop(&backwardStack);
+    if (previousPage != NULL) {
+         currentPage = peek(&backwardStack);
+        if(currentPage == NULL) {
+            currentPage = previousPage;
+        }
+        push(&forwardStack, previousPage); 
+        printf("\nAction: Go Back\n");
+        printf("Current Page: %s\n", currentPage);
+    } else {
+        printf("\nAction: Go Back\n");
+        printf("No previous page.\n");
+    }
+
+    char *nextPage = pop(&forwardStack);
+    if (nextPage != NULL) {
+        push(&backwardStack, nextPage); 
+        printf("\nAction: Go Forward\n");
+        printf("Current Page: %s\n", nextPage);
+    } else {
+        printf("\nAction: Go Forward\n");
+        printf("No next page.\n");
+    }
+
+
+     
+    previousPage = pop(&backwardStack);
+    if (previousPage != NULL) {
+         currentPage = peek(&backwardStack);
+        if(currentPage == NULL) {
+            currentPage = previousPage;
+        }
+        push(&forwardStack, previousPage); 
+        printf("\nAction: Go Back\n");
+        printf("Current Page: %s\n", currentPage);
+    } else {
+        printf("\nAction: Go Back\n");
+        printf("No previous page.\n");
+    }
+
+
+    return 0;
+}
