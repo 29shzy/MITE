@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_SONG_NAME 256
+#define MAX_PLAYLIST_SIZE 10 // Adjust as needed
+
+typedef struct Song {
+    char name[MAX_SONG_NAME];
+} Song;
+
+Song playlist[MAX_PLAYLIST_SIZE];
+int front = 0;
+int rear = 0;
+int count = 0; // Number of songs in the queue
+
+void enqueue(const char *name) {
+    if (count < MAX_PLAYLIST_SIZE) {
+        strcpy(playlist[rear].name, name);
+        rear = (rear + 1) % MAX_PLAYLIST_SIZE; // Circular wrap for rear
+        count++;
+    } else {
+        printf("Playlist is full. Cannot add more songs.\n");
+    }
+}
+
+void displayCurrentSong() {
+    if (count == 0) {
+        printf("Playlist is empty.\n");
+    } else {
+        printf("Current Song: %s\n", playlist[front].name);
+    }
+}
+
+void playNextSong() {
+    if (count == 0) {
+        return; // Playlist is empty
+    }
+    front = (front + 1) % MAX_PLAYLIST_SIZE; // Circular wrap for front
+}
+
+int main() {
+    enqueue("Song A");
+    enqueue("Song B");
+    enqueue("Song C");
+
+    displayCurrentSong();
+    playNextSong();
+    displayCurrentSong();
+    playNextSong();
+    displayCurrentSong();
+    playNextSong();
+    displayCurrentSong(); // Loops back to Song A
+
+    return 0;
+}
